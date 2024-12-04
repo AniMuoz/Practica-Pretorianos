@@ -11,8 +11,10 @@ nombres =[]
 ruts = []
 record = []
 event = []
+fecha = []
+asistencia = []
 inasitencia = []
-control_insasitencia = [[], [], [], []]  # Cuatro listas vacías
+control_insasitencia = [[], [], [], [], []]  # Cinco listas vacías
 data = []
 
 directorio_raiz = os.path.dirname(os.path.abspath(__file__))
@@ -31,17 +33,39 @@ def busca_archivos(folder, data):
         
             hoja = excel.active #abre la hoja de excel
         
-            evento = [hoja.cell(row=2,column=1).value] #se rescata el titulo del evento
+            evento = [hoja.cell(row=1,column=1).value] #se rescata el titulo del evento
             print(evento[0])
+            
+            fecha = [hoja.cell(row=3,column=1).value] #se rescata la fecha del evento
+            print(fecha[0])
 
-            nombres = [hoja.cell(row=i,column=3).value for i in range(5,hoja.max_row+1)] #se rescata el nombre de los gaurdias
-            print("Nombres: ",nombres)
+            for i in range(6, hoja.max_row + 1):
+                nombre = hoja.cell(row=i, column=3).value
+                if not nombre:  # Si el nombre está vacío o es None
+                    break       # Detener la lectura
+                nombres.append(nombre)
+            print("Nombres: ", nombres)
 
-            ruts = [hoja.cell(row=i,column=4).value for i in range(5,hoja.max_row+1)] #se rescata ruts de los guardias
-            print("Ruts: ",ruts)
+            for i in range(6, hoja.max_row + 1):
+                rut = hoja.cell(row=i, column=4).value
+                if not rut:  # Si el rut está vacío o es None
+                    break       # Detener la lectura
+                ruts.append(rut)
+            print("Ruts: ", ruts)
+            #ruts = [hoja.cell(row=i,column=4).value for i in range(6,hoja.max_row+1)] #se rescata ruts de los guardias
+            #print("Ruts: ",ruts)
 
-            asistencia = [hoja.cell(row=i,column=2).value for i in range(5,hoja.max_row+1)] #se rescata asistencia al evento de los guardias
-            print("Asistencia (1 = si | 2 = no): ", asistencia)
+            for i in range(6, hoja.max_row + 1):
+                asiste = hoja.cell(row=i, column=2).value
+                if i > len(nombres) + 5:
+                    #print("ME PAROOOOOOOO", i, len(asistencia))
+                    #and not asiste:  # Si el nombre está vacío o es None
+                    break       # Detener la lectura
+                asistencia.append(asiste)
+                #print("añadi ", i)
+            print("Asistencia: ", asistencia)
+            #asistencia = [hoja.cell(row=i,column=2).value for i in range(6,hoja.max_row+1)] #se rescata asistencia al evento de los guardias
+            #print("Asistencia (1 = si | 2 = no): ", asistencia)
             
             print("-"*50)
             
@@ -53,6 +77,7 @@ def busca_archivos(folder, data):
                     control_insasitencia[1].append(ruts[i])
                     control_insasitencia[2].append("Inasistencia")
                     control_insasitencia[3].append(evento[0])  # Usar el título del evento
+                    control_insasitencia[4].append(fecha[0])   #Guardar fecha del evento
                     print(f"Inasistencia al evento: {nombres[i]}")  # Imprimir encontrado
             print("-"*50)
             # Añadir datos a data
@@ -70,16 +95,28 @@ def busca_archivos(folder, data):
                             data[2].append(record[i])
                         
             excel.close()
-            excel.save(filename)
+            #excel.save(filename)
         for i in range(0, len(data[0])):
             if len(record) == 0 :
                 record.append(0)
+            print(i)
+            print(len(data[0]), len(asistencia), len(nombres), len(ruts))
+            #if asistencia[i] == None:
+            #    print("NADA")
+            #    record.append( 0)
+            print(len(record))
             if asistencia[i] == 1:
+                if len(record) < len(asistencia):
+                    while len(record) < len(asistencia):
+                        record.append (0)
                 if record[i] == 0:
+                    print(i)
                     record.insert(i, 1)
                 else:
                     record[i] = record[i] + 1
-        
+    
+    print(len(record), len(data[2]), len(data[0]))
+    
     if len(record) > len(data[0]):
         record.pop(-1)
 
@@ -159,11 +196,13 @@ def inasistencia(dia):
     hoja['A1'] = 'Nombre'
     hoja['B1'] = 'Rut'
     hoja['C1'] = 'Evento'
+    hoja['D1'] = 'Fecha'
 
     for i in range(0, len(control_insasitencia[0])):
         hoja.cell(row = i + 2, column = 1, value = control_insasitencia[0][i])
         hoja.cell(row = i + 2, column = 2, value = control_insasitencia[1][i])
         hoja.cell(row = i + 2, column = 3, value = control_insasitencia[3][i])
+        hoja.cell(row = i + 2, column = 4, value = control_insasitencia[4][i])
 
     guardias.save(f"Inasistencia_guardias_{dia}.xlsx")
 
