@@ -3,6 +3,7 @@ from tkinter import filedialog, messagebox
 import openpyxl
 import datetime
 import os
+from PIL import Image, ImageTk
 
 # Aquí va el código de tu lógica existente (el que proporcionaste)
 
@@ -13,6 +14,9 @@ event = []
 inasitencia = []
 control_insasitencia = [[], [], [], []]  # Cuatro listas vacías
 data = []
+
+directorio_raiz = os.path.dirname(os.path.abspath(__file__))
+ruta_imagen = os.path.join(directorio_raiz, 'images', 'LOGOFOOTER.PNG')
 
 # Para simplificar, aquí solo se incluyen las funciones necesarias
 # Asegúrate de incluir todas las funciones de tu código original
@@ -167,38 +171,58 @@ class App:
     def __init__(self, root):
         self.root = root
         self.root.title("Sistema de Filtrado de Asistencia de Guardias")
+        self.root.geometry("700x500")
 
-        self.label = tk.Label(root, text="Indique la ruta donde están los eventos:")
-        self.label.pack()
+        # Frame principal
+        main_frame = tk.Frame(root)
+        main_frame.pack(fill="both", expand=True)
+
+        # Título (lado izquierdo)
+        #title_label = tk.Label(main_frame, text="Sistema de asistencia de guardias", font=("Arial", 16, "bold"))
+        #title_label.pack(side="left", anchor="nw", padx=10, pady=10)
+
+        # Imagen (arriba a la derecha)
+        #self.image = Image.open("../images/LOGOFOOTER.PNG")  # Reemplaza con la ruta de tu imagen
+        self.image = Image.open(ruta_imagen)
+        self.image = self.image.resize((100, 120), Image.Resampling.LANCZOS)
+        self.photo = ImageTk.PhotoImage(self.image)
+
+        image_label = tk.Label(main_frame, image=self.photo)
+        image_label.place(relx=1.0, rely=0.0, anchor="ne", x=-10, y=10)  # Posiciona la imagen
+
+        # Texto y entrada (parte principal)
+        self.label = tk.Label(main_frame, text="Indique la ruta donde están los eventos:")
+        self.label.pack(anchor="center", pady=10)
 
         self.folder_path = tk.StringVar()
-        self.entry = tk.Entry(root, textvariable=self.folder_path, width=50)
-        self.entry.pack()
+        self.entry = tk.Entry(main_frame, textvariable=self.folder_path, width=50)
+        self.entry.pack(anchor="center", pady=5)
 
-        self.browse_button = tk.Button(root, text="Buscar Carpeta", command=self.browse_folder)
-        self.browse_button.pack()
+        self.browse_button = tk.Button(main_frame, text="Buscar Carpeta", command=self.browse_folder)
+        self.browse_button.pack(anchor="center", pady=5)
 
-        self.process_button = tk.Button(root, text="Procesar Eventos", command=self.process_events)
-        self.process_button.pack()
+        self.process_button = tk.Button(main_frame, text="Procesar Eventos", command=self.process_events)
+        self.process_button.pack(anchor="center", pady=5)
 
-        self.result_label = tk.Label(root, text="")
-        self.result_label.pack()
+        self.result_label = tk.Label(main_frame, text="")
+        self.result_label.pack(anchor="center", pady=5)
 
         self.option_var = tk.IntVar()
-        self.option_label = tk.Label(root, text="Seleccione una opción:")
-        self.option_label.pack()
-        
-        self.option1 = tk.Radiobutton(root, text="1. Obtener record de guardias", variable=self.option_var, value=1)
-        self.option1.pack()
+        self.option_label = tk.Label(main_frame, text="Seleccione una opción:")
+        self.option_label.pack(anchor="center", pady=5)
 
-        self.option2 = tk.Radiobutton(root, text="2. Obtener guardias que menos asistencia tiene", variable=self.option_var, value=2)
-        self.option2.pack()
+        self.option1 = tk.Radiobutton(main_frame, text="1. Obtener record de guardias", variable=self.option_var, value=1)
+        self.option1.pack(pady=5)
 
-        self.option3 = tk.Radiobutton(root, text="3. Que evento faltó cada guardia", variable=self.option_var, value=3)
-        self.option3.pack()
+        self.option2 = tk.Radiobutton(main_frame, text="2. Obtener guardias que menos asistencia tiene", variable=self.option_var, value=2)
+        self.option2.pack(pady=5)
 
-        self.execute_button = tk.Button(root, text="Ejecutar Opción", command=self.execute_option)
-        self.execute_button.pack()
+        self.option3 = tk.Radiobutton(main_frame, text="3. Qué evento faltó cada guardia", variable=self.option_var, value=3)
+        self.option3.pack(pady=5)
+
+        self.execute_button = tk.Button(main_frame, text="Ejecutar Opción", command=self.execute_option)
+        self.execute_button.pack(anchor="center", pady=10)
+
 
     def browse_folder(self):
         folder_selected = filedialog.askdirectory()
