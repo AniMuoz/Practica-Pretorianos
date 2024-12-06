@@ -17,6 +17,9 @@ inasitencia = []
 control_insasitencia = [[], [], [], [], []]  # Cinco listas vacías
 data = []
 
+f = []
+e = []
+
 directorio_raiz = os.path.dirname(os.path.abspath(__file__))
 ruta_imagen = os.path.join(directorio_raiz, 'images', 'LOGOFOOTER.PNG')
 
@@ -24,20 +27,24 @@ ruta_imagen = os.path.join(directorio_raiz, 'images', 'LOGOFOOTER.PNG')
 # Asegúrate de incluir todas las funciones de tu código original
 
 def busca_archivos(folder, data):
+    archivo = 0
+    zz = 0
     #ciclo para leer todos los archivos de la ruta
     for filename in os.listdir(folder):
         if filename.endswith(".xlsx"):  # Procesar solo archivos .xlsx
             filepath = os.path.join(folder, filename)
-        
+
             excel = openpyxl.load_workbook(filepath) #abre excel
         
             hoja = excel.active #abre la hoja de excel
         
             evento = [hoja.cell(row=1,column=1).value] #se rescata el titulo del evento
             print(evento[0])
+            #e.append(evento[0])
             
             fecha = [hoja.cell(row=3,column=1).value] #se rescata la fecha del evento
             print(fecha[0])
+            #f.append(fecha[0])
 
             for i in range(6, hoja.max_row + 1):
                 nombre = hoja.cell(row=i, column=3).value
@@ -87,15 +94,35 @@ def busca_archivos(folder, data):
                         
             excel.close()
             #excel.save(filename)
+            
+            
+            
+            
+            ff = 0
+            #if archivo <= 1:
+            #    ff = zz
+            
+            count = 0
+            
+            print(len(ruts))
+            while ff < len(ruts):
+                if zz != 0 and count == 0:
+                    ff = zz
+                f.append(fecha[0])
+                e.append(evento[0])
+                ff += 1
+                count += 1
+            zz = len(ruts)
+                
         for i in range(0, len(data[0])):
             if len(record) == 0 :
                 record.append(0)
-            print(i)
-            print(len(data[0]), len(asistencia), len(nombres), len(ruts))
+            #print(i)
+            #print(len(data[0]), len(asistencia), len(nombres), len(ruts))
             #if asistencia[i] == None:
             #    print("NADA")
             #    record.append( 0)
-            print(len(record))
+            #print(len(record))
 
             if i >= len(record):  # Asegúrate de que record sea lo suficientemente largo
                 record.append(0)
@@ -105,21 +132,24 @@ def busca_archivos(folder, data):
                 #while len(record) < len(asistencia):
                 #   record.append (0)
                 if record[i] == 0:
-                    print(i)
+                    #print(i)
                     record.insert(i, 1)
                 else:
                     record[i] = record[i] + 1
-    
+    archivo += 1
+    #nombres = []
+    #ruts = []
 
     # Procesar asistencia
+    print(len(e))
     for i in range(0,  len(asistencia)):
         if asistencia[i] == None:  # Si la asistencia es 0
             inasitencia.append("Inasistencia")  # Añadir a la lista de inasistencia
             control_insasitencia[0].append(nombres[i])
             control_insasitencia[1].append(ruts[i])
             control_insasitencia[2].append("Inasistencia")
-            control_insasitencia[3].append(evento[0])  # Usar el título del evento
-            control_insasitencia[4].append(fecha[0])   #Guardar fecha del evento
+            control_insasitencia[3].append(e[i])  # Usar el título del evento
+            control_insasitencia[4].append(f[i])   #Guardar fecha del evento
             print(f"Inasistencia al evento: {nombres[i]}")  # Imprimir encontrado
 
     print(len(record), len(data[2]), len(data[0]))
