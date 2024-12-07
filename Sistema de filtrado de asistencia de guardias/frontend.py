@@ -15,7 +15,8 @@ fecha = []
 asistencia = []
 inasitencia = []
 control_insasitencia = [[], [], [], [], []]  # Cinco listas vacías
-data = []
+data = [[], [], []]
+ci = [[], [], []]
 
 f = []
 e = []
@@ -27,160 +28,99 @@ ruta_imagen = os.path.join(directorio_raiz, 'images', 'LOGOFOOTER.PNG')
 # Asegúrate de incluir todas las funciones de tu código original
 
 def busca_archivos(folder, data):
-    archivo = 0
+    count = 0
     zz = 0
-    #ciclo para leer todos los archivos de la ruta
+    ff = 0
+
     for filename in os.listdir(folder):
         if filename.endswith(".xlsx"):  # Procesar solo archivos .xlsx
             filepath = os.path.join(folder, filename)
+            excel = openpyxl.load_workbook(filepath)
+            hoja = excel.active
 
-            excel = openpyxl.load_workbook(filepath) #abre excel
-        
-            hoja = excel.active #abre la hoja de excel
-        
-            evento = [hoja.cell(row=1,column=1).value] #se rescata el titulo del evento
-            print(evento[0])
-            #e.append(evento[0])
-            
-            fecha = [hoja.cell(row=3,column=1).value] #se rescata la fecha del evento
-            print(fecha[0])
-            #f.append(fecha[0])
+            evento = [hoja.cell(row=1, column=1).value]
+            fecha = [hoja.cell(row=3, column=1).value]
+
+            nombres = []
+            ruts = []
+            asistencia = []
 
             for i in range(6, hoja.max_row + 1):
                 nombre = hoja.cell(row=i, column=3).value
-                if not nombre:  # Si el nombre está vacío o es None
-                    break       # Detener la lectura
-                nombres.append(nombre)
-            print("Nombres: ", nombres)
-
-            for i in range(6, hoja.max_row + 1):
                 rut = hoja.cell(row=i, column=4).value
-                if not rut:  # Si el rut está vacío o es None
-                    break       # Detener la lectura
-                ruts.append(rut)
-            print("Ruts: ", ruts)
-            #ruts = [hoja.cell(row=i,column=4).value for i in range(6,hoja.max_row+1)] #se rescata ruts de los guardias
-            #print("Ruts: ",ruts)
-
-            for i in range(6, hoja.max_row + 1):
                 asiste = hoja.cell(row=i, column=2).value
-                if i > len(nombres) + 5:
-                    #print("ME PAROOOOOOOO", i, len(asistencia))
-                    #and not asiste:  # Si el nombre está vacío o es None
-                    break       # Detener la lectura
+
+                if not nombre or not rut:  # Si nombre o rut están vacíos, termina la lectura
+                    break
+                
+                nombres.append(nombre)
+                ruts.append(rut)
                 asistencia.append(asiste)
-                #print("añadi ", i)
-            print("Asistencia: ", asistencia)
-            #asistencia = [hoja.cell(row=i,column=2).value for i in range(6,hoja.max_row+1)] #se rescata asistencia al evento de los guardias
-            #print("Asistencia (1 = si | 2 = no): ", asistencia)
-            
-            print("-"*50)
-            
-            
-            print("-"*50)
-            # Añadir datos a data
-            if len(data) == 0:
-                data = [nombres, ruts, record]
-            else:
-                if len(data[0]) != len(nombres):  # Asegúrate de que data[0] y nombres tienen longitudes diferentes
-                    for i in range(len(nombres)):
-                        if nombres[i] not in data[0]:  # Solo añade si no está ya en data[0]
-                            print("añadiendo:", nombres[i])
-                            data[0].append(nombres[i])  # Añade el nombre
-                            data[1].append(ruts[i])     # Añade el rut correspondiente
-                            if record[i] == None:
-                                record.insert(i, 0)
-                            data[2].append(record[i])
-                        
-            excel.close()
-            #excel.save(filename)
-            
-            
-            
-            
-            ff = 0
-            #if archivo <= 1:
-            #    ff = zz
-            
-            count = 0
-            
-            print(len(ruts))
-            while ff < len(ruts):
-                if zz != 0 and count == 0:
-                    ff = zz
+
                 f.append(fecha[0])
                 e.append(evento[0])
-                ff += 1
-                count += 1
-            zz = len(ruts)
-                
-        for i in range(0, len(data[0])):
-            if len(record) == 0 :
-                record.append(0)
-            #print(i)
-            #print(len(data[0]), len(asistencia), len(nombres), len(ruts))
-            #if asistencia[i] == None:
-            #    print("NADA")
-            #    record.append( 0)
-            #print(len(record))
 
-            if i >= len(record):  # Asegúrate de que record sea lo suficientemente largo
-                record.append(0)
+            print("Nombres: ", nombres)
+            print("Ruts: ", ruts)
+            print("Asistencia: ", asistencia)
+            print("-" * 50)
 
-            if asistencia[i] == 1:
-                #if len(record) < len(asistencia):
-                #while len(record) < len(asistencia):
-                #   record.append (0)
-                if record[i] == 0:
-                    #print(i)
-                    record.insert(i, 1)
+            ci[0].append(nombres)
+            ci[1].append(ruts)
+            ci[2].append(asistencia)
+
+            #print(len(ruts))
+            #while ff < len(ruts):
+            #    if zz != 0 and count == 0:
+            #        ff = zz
+            #    f.append(fecha[0])
+            #    e.append(evento[0])
+            #    ff += 1
+            #    count += 1
+            #zz = len(ruts)
+
+            # Añadir datos a `data` asegurándose de que no se repitan nombres
+            for i, nombre in enumerate(nombres):
+                if nombre not in data[0]:  # Si el nombre no está ya en `data[0]`
+                    data[0].append(nombre)
+                    data[1].append(ruts[i])
+                    record_value = 1 if asistencia[i] == 1 else 0
+                    data[2].append(record_value)
                 else:
-                    record[i] = record[i] + 1
-    archivo += 1
-    #nombres = []
-    #ruts = []
+                    # Si el nombre ya existe, actualiza el registro
+                    index = data[0].index(nombre)
+                    if asistencia[i] == 1:
+                        data[2][index] += 1
 
-    # Procesar asistencia
-    print(len(e))
-    for i in range(0,  len(asistencia)):
-        if asistencia[i] == None:  # Si la asistencia es 0
-            inasitencia.append("Inasistencia")  # Añadir a la lista de inasistencia
-            control_insasitencia[0].append(nombres[i])
-            control_insasitencia[1].append(ruts[i])
-            control_insasitencia[2].append("Inasistencia")
-            control_insasitencia[3].append(e[i])  # Usar el título del evento
-            control_insasitencia[4].append(f[i])   #Guardar fecha del evento
-            print(f"Inasistencia al evento: {nombres[i]}")  # Imprimir encontrado
+            excel.close()
+    print(len(f))
+    #print(ci, len(ci[0]),len(ci[2]),len(ci[2][2]), len(ci[0][0]))
+    # Procesar inasistencias
+    k = 0
+    for j in range(len(ci[2])):
+        for i in range(len(ci[2][j])):
+            #print(i,j)
+            #print(len(ci[2][j]))
+            #print(ci[2][j][i])
+            #print(len(f))
+            if ci[2][j][i] == None:  # Si el registro de asistencia es 0
+                inasitencia.append("Inasistencia")
+                control_insasitencia[0].append(ci[0][j][i])  # Nombre
+                control_insasitencia[1].append(ci[1][j][i])  # RUT
+                control_insasitencia[2].append("Inasistencia")
+                control_insasitencia[3].append(e[k])  # Evento
+                control_insasitencia[4].append(f[k])  # Fecha
+            k += 1
 
-    print(len(record), len(data[2]), len(data[0]))
-    
-    if len(record) > len(data[0]):
-        record.pop(-1)
-
-    data[2].pop()
-
-    print(record)
-    #Print de debuging
-    #print("Guardias con inasistencia:", inasitencia)
-    #print(data[0])
-    #print(data[2])
-    #print(data[2])
-    #print(data[3])
-    #print("\nDatos insacistencia: ", control_insasitencia)
-
-    #Ordenar de mayor a menor
+    # Ordenar de mayor a menor
     indices_ordenados = sorted(range(len(data[2])), key=lambda i: data[2][i], reverse=True)
+    data_ordenada = [[sublista[i] for i in indices_ordenados] for sublista in data]
 
-    # Aplicamos el orden a cada sublista
-    data_ordenada= [[sublista[i] for i in indices_ordenados] for sublista in data]
+    # Ordenar de menor a mayor
+    indices_ordenadosinv = sorted(range(len(data[2])), key=lambda i: data[2][i])
+    data_ordenadainv = [[sublista[i] for i in indices_ordenadosinv] for sublista in data]
 
-    #Ordenar de menor a mayor
-    indices_ordenadosinv = sorted(range(len(data[2])), key=lambda i: data[2][i], reverse=False)
-
-    # Aplicamos el orden a cada sublista
-    data_ordenadainv= [[sublista[i] for i in indices_ordenadosinv] for sublista in data]
-
-    return data_ordenada,data_ordenadainv
+    return data_ordenada, data_ordenadainv
 
 def mas_asistencia(data_ordenada, dia):
     #Excel ordenado de mas asistentes a menos
