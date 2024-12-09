@@ -26,7 +26,7 @@ hoja['B6'].font = Font(bold=True, size=12)
 
 hoja['B8'] = 'CLASIFICACION DEL GASTO'
 hoja['B8'].font = Font(bold=True, size=12)
-hoja['C8'] = 'MONTO'
+hoja['C8'] = 'MONTO ($)'
 hoja['C8'].font = Font(bold=True, size=12)
 
 hoja['B9'] = 'CONSUMOS BASICOS'		
@@ -46,8 +46,8 @@ hoja['B22'] = 'ALIMENTACIÓN'
 hoja['B23'] = 'TOTAL GASTOS DEL MES'	
 
 topicos = ['CONSUMOS BASICOS', 'TELEFONO E INTERNET', 'GASTOS COMUNES', 'ARRIENDO DE OFICINA', 'COMBUSTIBLE', 'ESCRITORIO Y OFICINA', 
-           'ESTACIONAMIENTO', 'ARTICULOS DE ASEO', 'GASTOS DE REPRESENTACIÓN', 'VESTUARIO Y CALZADO', 'PASAJES, PEAJES Y CORREOS',
-           'MANTENIMIENTO, REPARACIÓN Y SEGURIDAD', 'EQUIPAMIENTO', 'ALIMENTACIÓN']
+        'ESTACIONAMIENTO', 'ARTICULOS DE ASEO', 'GASTOS DE REPRESENTACIÓN', 'VESTUARIO Y CALZADO', 'PASAJES, PEAJES Y CORREOS',
+        'MANTENIMIENTO, REPARACIÓN Y SEGURIDAD', 'EQUIPAMIENTO', 'ALIMENTACIÓN']
 
 for i in range (9, 23):
     valor = int(input(f"Monto de {topicos[i - 9]}: "))
@@ -60,8 +60,41 @@ hoja['D26'].font = Font(bold=True, size=12)
 hoja['D27'] = 'GERENTE GENERAL'
 hoja['D27'].font = Font(bold=True, size=12)
 
-#i = 22
-#hoja.cell(row = i + 2, column = 2, value = mes)
-#hoja.cell(row = i + 2, column = 3, value = "$" + mes)
+fila = 30
+
+#hoja['B30'] = f'DETALLE GASTOS EN {topicos[0]} MES {mes} DEL AÑO {fecha.year}'
+hoja.cell(row = fila, column = 2, value = f'DETALLE GASTOS EN {topicos[0]} MES {mes} DEL AÑO {fecha.year}').font = Font(bold=True, size=12)
+
+x_inicial = fila + 2
+hoja.cell(row = x_inicial, column = 2, value = "PROVEEDOR")
+hoja.cell(row = x_inicial, column = 3, value = "N° DE BOLETA")
+hoja.cell(row = x_inicial, column = 4, value = "FECHA")
+hoja.cell(row = x_inicial, column = 5, value = "MONTO ($)")
+
+x = 1
+contador = 1
+
+print(f"DETALLE GASTOS EN {topicos[0]} MES {mes} DEL AÑO {fecha.year}")
+
+while x == 1:
+    proveedor = input("Ingrese proveedor: ")
+    nboleta = input("Ingrese numero de boeta: ")
+    fecha_boleta = input("Ingrese fecha de la boleta: ")
+    monto = int(input("Monto de la boleta: "))
+
+    hoja.cell(row = x_inicial + contador, column = 2, value = proveedor)
+    hoja.cell(row = x_inicial + contador, column = 3, value = nboleta)
+    hoja.cell(row = x_inicial + contador, column = 4, value = fecha_boleta)
+    hoja.cell(row = x_inicial + contador, column = 5, value = monto)
+
+    x = int(input("¿Quiere añadir otra boleta? 1 = si | 0 = no ==> "))
+    while (x > 1 or x < 0):
+        x = int(input("Ingrese valor valido 1 = si | 0 = no ==> "))
+    
+    contador += 1
+    
+    x_final = x_inicial + 1
+hoja.cell(row = x_final + 2, column = 2, value = "VALOR TOTAL").font = Font(bold=True, size=12)
+hoja.cell(row = x_final + 2, column = 5, value = f'=SUM(E{x_inicial + 1}:E{x_final + 1})')
 
 guardias.save(f"Detalle_gastos_pretorianos_seguridad_{dia}.xlsx")
