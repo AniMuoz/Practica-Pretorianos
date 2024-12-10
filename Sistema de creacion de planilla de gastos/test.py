@@ -3,10 +3,8 @@ import openpyxl
 import datetime
 import os.path as path
 from openpyxl.styles import Font
-from openpyxl.styles import Alignment
 
 data = [[],[],[],[],[]]
-monto_final = []
 
 fecha = datetime.date.today()
 dia = str(fecha.year) + str(fecha.month) + str(fecha.day)
@@ -45,11 +43,6 @@ else:
     guardias = openpyxl.Workbook()
 
 hoja = guardias.active
-
-hoja.column_dimensions['B'].width = 60
-hoja.column_dimensions['C'].width = 15
-hoja.column_dimensions['D'].width = 15
-hoja.column_dimensions['E'].width = 25
 
 mes = input("Escriba el mes en el que quiere hacer la nomina: ")
 
@@ -91,10 +84,8 @@ hoja['C23'] = '=SUM(C9:C22)'
 
 hoja['D26'] = 'FREDDY ANDRES MUÑOZ OLIVARES'
 hoja['D26'].font = Font(bold=True, size=12)
-hoja['D26'].alignment = Alignment(horizontal='center', vertical='center')
 hoja['D27'] = 'GERENTE GENERAL'
 hoja['D27'].font = Font(bold=True, size=12)
-hoja['D27'].alignment = Alignment(horizontal='center', vertical='center')
 
 fila = 30
 
@@ -143,15 +134,7 @@ for i in range(len(topicos)):
     hoja.cell(row = x_final + 1, column = 2, value = "VALOR TOTAL").font = Font(bold=True, size=12)
     hoja.cell(row = x_final + 1, column = 5, value = f'=SUM(E{x_inicial + 1}:E{x_final})')
 
-    monto_final.append(f'E{x_final + 1}')
-
     fila = x_final + 4
 
-for i in range (9, 23):
-    if hoja[f'C{i}'] == None:
-        hoja.cell(row = i, column = 3, value = 0)
-    else:
-        hoja.cell(row = i, column = 3, value = f'={monto_final[i - 9]}')
-
 guardias.save(f"Detalle_gastos_pretorianos_seguridad_{dia}.xlsx")
-print(monto_final)
+
