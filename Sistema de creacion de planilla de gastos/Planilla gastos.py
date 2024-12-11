@@ -37,6 +37,43 @@ def datos(topicos, data):
     return(data)
     
 
+def guardar_data(data, dia):
+    guardar = openpyxl.Workbook()
+    hoja1 = guardar.active
+    for i in range(len(data[1])):
+        hoja1.cell(row = i + 1, column = 1, value = data[0][i])
+        hoja1.cell(row = i + 1, column = 2, value = data[1][i])
+        hoja1.cell(row = i + 1, column = 3, value = data[2][i])
+        hoja1.cell(row = i + 1, column = 4, value = data[3][i])
+        hoja1.cell(row = i + 1, column = 5, value = data[4][i])
+    guardar.save(f"Datos_guardados_no_procesados_{dia}.xlsx")
+
+def recuperar_data(data):
+    recupera = input("Ingrese el nombre del archivo de recuperacion con su extencion ==> ")
+    excel = openpyxl.load_workbook(recupera)
+    hoja2 = excel.active
+    for i in range(1, hoja2.max_column + 1):
+        print(i)
+        topi = hoja2.cell(row = i, column = 1).value
+        prove = hoja2.cell(row = i, column = 2).value
+        nbole = hoja2.cell(row = i, column = 3).value
+        febole = hoja2.cell(row = i, column = 4).value
+        mon = hoja2.cell(row = i, column = 5).value
+
+        print(topi, prove, nbole,febole, mon)
+
+        if not topi or not prove or not nbole or not febole or not mon:
+            break
+
+        data[0].append(topi)
+        data[1].append(prove)
+        data[2].append(nbole)
+        data[3].append(febole)
+        data[4].append(int(mon))
+
+    excel.save(recupera)
+    return (data)
+
 #def gastos(dia):
 #Excel ordenada de menos asistentes a mas asistentes
 if path.exists(f"Detalle_gastos_pretorianos_seguridad_{dia}.xlsx"):
@@ -101,11 +138,24 @@ fila = 30
 #hoja['B30'] = f'DETALLE GASTOS EN {topicos[0]} MES {mes} DEL AÑO {fecha.year}'
 #hoja.cell(row = fila, column = 2, value = f'DETALLE GASTOS EN {topicos[0]} MES {mes} DEL AÑO {fecha.year}').font = Font(bold=True, size=12)
 
+r = int(input("¿Desea recuperar datos? 1 = Si | 0 = No ==> "))
+while r > 1 or r < 0:
+    r = int(input("Ingrese opcion valida 1 = si | 0 = no ==> "))
+
+if r == 1:
+    data = recuperar_data(data)
 
 data = datos(topicos, data)
 
 print("Len data[1]", len(data[1]))
 print("Len topicos", len(topicos))
+
+r = int(input("¿Desea guardar datos? 1 = Si | 0 = No ==> "))
+while r > 1 or r < 0:
+    r = int(input("Ingrese opcion valida 1 = si | 0 = no ==> "))
+
+if r == 1:
+    guardar_data(data, dia)
 
 for i in range(len(topicos)):
 
