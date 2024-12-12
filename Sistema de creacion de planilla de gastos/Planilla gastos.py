@@ -139,9 +139,13 @@ def gastos(dia, data, topicos):
 
         x_inicial = fila + 2
         hoja.cell(row = x_inicial, column = 2, value = "PROVEEDOR").font = Font(bold=True, size=11)
+        hoja[f'B{x_inicial}'].alignment = Alignment(horizontal='center', vertical='center')
         hoja.cell(row = x_inicial, column = 3, value = "N° DE BOLETA").font = Font(bold=True, size=11)
+        hoja[f'C{x_inicial}'].alignment = Alignment(horizontal='center', vertical='center')
         hoja.cell(row = x_inicial, column = 4, value = "FECHA").font = Font(bold=True, size=11)
+        hoja[f'D{x_inicial}'].alignment = Alignment(horizontal='center', vertical='center')
         hoja.cell(row = x_inicial, column = 5, value = "MONTO ($)").font = Font(bold=True, size=11)
+        hoja[f'E{x_inicial}'].alignment = Alignment(horizontal='center', vertical='center')
 
         x = 1
         contador = 1
