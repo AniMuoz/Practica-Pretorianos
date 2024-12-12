@@ -4,6 +4,7 @@ import datetime
 import os.path as path
 from openpyxl.styles import Font
 from openpyxl.styles import Alignment
+from PIL import Image, ImageTk
 
 data = [[],[],[],[],[]]
 monto_final = []
