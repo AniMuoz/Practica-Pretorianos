@@ -79,10 +79,11 @@ def recuperar_data(data):
     return (data)
 
 def gastos(dia, data, topicos):
-    if path.exists(f"Detalle_gastos_pretorianos_seguridad_{dia}.xlsx"):
-        guardias = openpyxl.load_workbook(f"Detalle_gastos_pretorianos_seguridad_{dia}.xlsx")
-    else:
-        guardias = openpyxl.Workbook()
+    #if path.exists(f"Detalle_gastos_pretorianos_seguridad_{dia}.xlsx"):
+    #    guardias = openpyxl.load_workbook(f"Detalle_gastos_pretorianos_seguridad_{dia}.xlsx")
+    #else:
+    #    guardias = openpyxl.Workbook()
+    guardias = openpyxl.Workbook()
 
     hoja = guardias.active
 
@@ -137,13 +138,19 @@ def gastos(dia, data, topicos):
         hoja.cell(row = fila, column = 2, value = f'DETALLE GASTOS EN {topicos[i]} MES {mes} DEL AÑO {fecha.year}').font = Font(bold=True, size=12)
 
         x_inicial = fila + 2
-        hoja.cell(row = x_inicial, column = 2, value = "PROVEEDOR")
-        hoja.cell(row = x_inicial, column = 3, value = "N° DE BOLETA")
-        hoja.cell(row = x_inicial, column = 4, value = "FECHA")
-        hoja.cell(row = x_inicial, column = 5, value = "MONTO ($)")
+        hoja.cell(row = x_inicial, column = 2, value = "PROVEEDOR").font = Font(bold=True, size=11)
+        hoja.cell(row = x_inicial, column = 3, value = "N° DE BOLETA").font = Font(bold=True, size=11)
+        hoja.cell(row = x_inicial, column = 4, value = "FECHA").font = Font(bold=True, size=11)
+        hoja.cell(row = x_inicial, column = 5, value = "MONTO ($)").font = Font(bold=True, size=11)
 
         x = 1
         contador = 1
+        
+        hoja.cell(row = x_inicial + contador, column = 2, value = "-")
+        hoja.cell(row = x_inicial + contador, column = 3, value = "-")
+        hoja.cell(row = x_inicial + contador, column = 4, value = "-")
+        hoja.cell(row = x_inicial + contador, column = 5, value = 0)
+        
         x_final = x_inicial
         for j in range(len(data[1])):
             if data[0][j] == topicos[i]:
@@ -157,20 +164,17 @@ def gastos(dia, data, topicos):
 
                 x_final += 1
 
-        hoja.cell(row = x_final + 1, column = 2, value = "VALOR TOTAL").font = Font(bold=True, size=12)
-        hoja.cell(row = x_final + 1, column = 5, value = f'=SUM(E{x_inicial + 1}:E{x_final})')
+        hoja.cell(row = x_final + 2, column = 2, value = "VALOR TOTAL").font = Font(bold=True, size=12)
+        hoja.cell(row = x_final + 2, column = 5, value = f'=IF(E{x_final}=0,0,SUM(E{x_inicial + 1}:E{x_final}))').font = Font(bold=True, size=12)
 
-        monto_final.append(f'E{x_final + 1}')
+        monto_final.append(f'E{x_final + 2}')
 
-        fila = x_final + 4
+        fila = x_final + 5
 
     for i in range (9, 23):
-        if hoja[f'C{i}'] == None:
-            hoja.cell(row = i, column = 3, value = 0)
-        else:
-            hoja.cell(row = i, column = 3, value = f'={monto_final[i - 9]}')
+        hoja.cell(row = i, column = 3, value = f'={monto_final[i - 9]}')
 
-    guardias.save(f"Detalle_gastos_pretorianos_seguridad_{dia}.xlsx")
+    guardias.save(f"Detalle_gastos_pretorianos_{mes}_{dia}.xlsx")
     #print(monto_final)
 
 def main(data, dia, topicos):
@@ -189,7 +193,7 @@ def main(data, dia, topicos):
     
         if r == 2:
             guardar_data(data, dia)
-       
+    
         if r == 3:
             data = recuperar_data(data)
 
