@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['Planilla_gastos_final.py'],
+    ['planilla_gastos_final.py'],
     pathex=[],
     binaries=[],
     datas=[('images', 'images')],
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='Planilla_gastos_final',
+    name='planilla_gastos_final',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

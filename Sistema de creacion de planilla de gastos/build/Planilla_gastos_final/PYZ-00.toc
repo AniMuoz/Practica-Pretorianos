@@ -1,5 +1,5 @@
 ('C:\\Users\\Anibal M\\Desktop\\Pretorianos\\Practica-Pretorianos\\Sistema de '
- 'creacion de planilla de gastos\\build\\Planilla_gastos_final\\PYZ-00.pyz',
+ 'creacion de planilla de gastos\\build\\planilla_gastos_final\\PYZ-00.pyz',
  [('PIL',
    'C:\\Users\\Anibal '
    'M\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\PIL\\__init__.py',

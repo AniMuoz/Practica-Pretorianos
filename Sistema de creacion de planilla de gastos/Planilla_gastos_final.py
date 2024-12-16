@@ -313,4 +313,11 @@ btn_recuperar.grid(row=0, column=1, padx=5)
 btn_procesar = ttk.Button(frame_buttons, text="Procesar Datos", command=lambda: procesar_datos(data, dia, topicos))
 btn_procesar.grid(row=0, column=2, padx=5)
 
+# Agregar el mensaje de derechos reservados
+frame_footer = ttk.Frame(root)
+frame_footer.pack(side="bottom", fill="x")
+
+lbl_derechos = ttk.Label(frame_footer, text="© 2024 Pretorianos Seguridad. Todos los derechos reservados.", anchor="w")
+lbl_derechos.pack(side="left", padx=10, pady=5)
+
 root.mainloop()

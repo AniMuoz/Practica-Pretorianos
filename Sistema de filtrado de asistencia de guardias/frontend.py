@@ -240,6 +240,12 @@ class App:
         self.execute_button = tk.Button(main_frame, text="Ejecutar Opción", command=self.execute_option)
         self.execute_button.pack(anchor="center", pady=10)
 
+        footer_frame = tk.Frame(root, bg="gray")
+        footer_frame.pack(side="bottom", fill="x")
+
+        footer_label = tk.Label(footer_frame, text="Derechos Reservados © 2024", bg="gray", fg="white", font=("Arial", 10))
+        footer_label.pack(anchor="center", pady=5)
+
 
     def browse_folder(self):
         folder_selected = filedialog.askdirectory()
