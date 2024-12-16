@@ -130,6 +130,10 @@ def mas_asistencia(data_ordenada, dia):
         guardias = openpyxl.Workbook()
 
     hoja = guardias.active
+    
+    hoja.column_dimensions['A'].width = 30
+    hoja.column_dimensions['B'].width = 12
+    hoja.column_dimensions['C'].width = 8
 
     hoja['A1'] = 'Nombre'   
     hoja['B1'] = 'Rut'
@@ -150,6 +154,10 @@ def menos_asistencia(data_ordenadainv, dia):
         guardias = openpyxl.Workbook()
 
     hoja = guardias.active
+    
+    hoja.column_dimensions['A'].width = 30
+    hoja.column_dimensions['B'].width = 12
+    hoja.column_dimensions['C'].width = 8
 
     hoja['A1'] = 'Nombre'
     hoja['B1'] = 'Rut'
@@ -170,6 +178,11 @@ def inasistencia(dia):
         guardias = openpyxl.Workbook()
 
     hoja = guardias.active
+    
+    hoja.column_dimensions['A'].width = 30
+    hoja.column_dimensions['B'].width = 12
+    hoja.column_dimensions['C'].width = 45
+    hoja.column_dimensions['D'].width = 50
 
     hoja['A1'] = 'Nombre'
     hoja['B1'] = 'Rut'

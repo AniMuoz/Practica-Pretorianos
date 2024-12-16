@@ -23,7 +23,7 @@ dia = str(fecha.year) + str(fecha.month).zfill(2) + str(fecha.day).zfill(2)
 
 topicos = ['CONSUMOS BASICOS', 'TELEFONO E INTERNET', 'GASTOS COMUNES', 'ARRIENDO DE OFICINA', 'COMBUSTIBLE', 'ESCRITORIO Y OFICINA', 
     'ESTACIONAMIENTO', 'ARTICULOS DE ASEO', 'GASTOS DE REPRESENTACIÓN', 'VESTUARIO Y CALZADO', 'PASAJES, PEAJES Y CORREOS',
-    'MANTENIMIENTO, REPARACIÓN Y SEGURIDAD', 'EQUIPAMIENTO', 'ALIMENTACIÓN']
+    'MANTENIMIENTO, REPARACIÓN Y SEGURIDAD', 'EQUIPAMIENTO', 'ALIMENTACIÓN', 'OTROS']
 
 # Funciones principales
 def guardar_data(data, dia):
@@ -70,6 +70,9 @@ def recuperar_data(data):
         messagebox.showerror("Error", f"No se pudo recuperar el archivo: {e}")
 
 def procesar_datos(data, dia, topicos):
+    
+    monto_final = []
+    
     guardias = openpyxl.Workbook()
     hoja = guardias.active
 
@@ -105,7 +108,7 @@ def procesar_datos(data, dia, topicos):
     hoja['C8'].font = Font(bold=True, size=12)
     hoja['C8'].border = thin_border
 
-    for i in range(9,24):
+    for i in range(9,25):
         hoja[f'B{i}'].border = thin_border
 
     hoja['B9'] = 'CONSUMOS BASICOS'		
@@ -122,22 +125,23 @@ def procesar_datos(data, dia, topicos):
     hoja['B20'] = 'MANTENIMIENTO, REPARACIÓN Y SEGURIDAD'		
     hoja['B21'] = 'EQUIPAMIENTO'		
     hoja['B22'] = 'ALIMENTACIÓN'
+    hoja['B23'] = 'OTROS'
 
-    hoja['B23'] = 'TOTAL GASTOS DEL MES'
-    hoja['B23'].font = Font(bold=True, size=12)
-    hoja['C23'] = '=SUM(C9:C22)'
-    hoja['C23'].font = Font(bold=True, size=12)
-    hoja['C23'].style = accounting_style
-    hoja['C23'].border = thin_border
+    hoja['B24'] = 'TOTAL GASTOS DEL MES'
+    hoja['B24'].font = Font(bold=True, size=12)
+    hoja['C24'] = '=SUM(C9:C22)'
+    hoja['C24'].font = Font(bold=True, size=12)
+    hoja['C24'].style = accounting_style
+    hoja['C24'].border = thin_border
 
-    hoja['D26'] = 'FREDDY ANDRES MUÑOZ OLIVARES'
-    hoja['D26'].font = Font(bold=True, size=12)
-    hoja['D26'].alignment = Alignment(horizontal='center', vertical='center')
-    hoja['D27'] = 'GERENTE GENERAL'
+    hoja['D27'] = 'FREDDY ANDRES MUÑOZ OLIVARES'
     hoja['D27'].font = Font(bold=True, size=12)
     hoja['D27'].alignment = Alignment(horizontal='center', vertical='center')
+    hoja['D28'] = 'GERENTE GENERAL'
+    hoja['D28'].font = Font(bold=True, size=12)
+    hoja['D28'].alignment = Alignment(horizontal='center', vertical='center')
 
-    fila = 30
+    fila = 31
 
     for i, topico in enumerate(topicos):
         hoja.cell(row=fila, column=2, value=f'DETALLE GASTOS EN {topico} MES {mes.upper()} DEL AÑO {fecha.year}').font = Font(bold=True, size=12)
@@ -194,9 +198,10 @@ def procesar_datos(data, dia, topicos):
 
         fila += contador + 6
 
-    for i in range (9, 23):
+    for i in range (9, 24):
         hoja[f'C{i}'].style = accounting_style
         hoja.cell(row = i, column = 3, value = f'={monto_final[i - 9]}').border = thin_border
+        
         
 
     filename = f"Detalle_gastos_pretorianos_{mes}_{dia}.xlsx"
