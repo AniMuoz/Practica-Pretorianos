@@ -100,7 +100,21 @@ def agregar_guardias(data, root):
             indice = seleccionado[0]
             guardias[0].append(data[0][indice])
             guardias[1].append(data[1][indice])
-            lista_seleccionados.insert(tk.END, data[0][indice])
+            lista_seleccionados.insert(tk.END, f"{len(guardias[0])}. {data[0][indice]}")
+
+    def eliminar_guardia():
+        seleccionado = lista_seleccionados.curselection()
+        if seleccionado:
+            indice = seleccionado[0]
+            del guardias[0][indice]
+            del guardias[1][indice]
+            lista_seleccionados.delete(indice)
+            actualizar_numeracion()
+
+    def actualizar_numeracion():
+        lista_seleccionados.delete(0, tk.END)
+        for idx, nombre in enumerate(guardias[0]):
+            lista_seleccionados.insert(tk.END, f"{idx + 1}. {nombre}")
 
     def finalizar():
         evento = entrada_evento.get()
@@ -114,34 +128,37 @@ def agregar_guardias(data, root):
     frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
     tk.Label(frame, text="Guardias disponibles:", font=("Arial", 14)).grid(row=0, column=0, padx=5, pady=5)
-    lista_guardias = tk.Listbox(frame, height=15, width=30, font=("Arial", 12))
+    lista_guardias = tk.Listbox(frame, height=15, width=40, font=("Arial", 12))
     lista_guardias.grid(row=1, column=0, padx=5, pady=5)
 
-    for nombre in data[0]:
-        lista_guardias.insert(tk.END, nombre)
+    for idx, nombre in enumerate(data[0]):
+        lista_guardias.insert(tk.END, f"{idx + 1}. {nombre}")
 
     boton_agregar = tk.Button(frame, text="Añadir", font=("Arial", 12), command=añadir_guardia)
     boton_agregar.grid(row=1, column=1, padx=5, pady=5)
 
     tk.Label(frame, text="Guardias seleccionados:", font=("Arial", 14)).grid(row=0, column=2, padx=5, pady=5)
-    lista_seleccionados = tk.Listbox(frame, height=15, width=30, font=("Arial", 12))
+    lista_seleccionados = tk.Listbox(frame, height=15, width=40, font=("Arial", 12))
     lista_seleccionados.grid(row=1, column=2, padx=5, pady=5)
 
-    tk.Label(frame, text="Nombre del evento:", font=("Arial", 12)).grid(row=2, column=0, padx=5, pady=5)
-    entrada_evento = tk.Entry(frame, font=("Arial", 12))
-    entrada_evento.grid(row=2, column=1, padx=5, pady=5)
+    boton_eliminar = tk.Button(frame, text="Eliminar", font=("Arial", 12), command=eliminar_guardia)
+    boton_eliminar.grid(row=2, column=2, padx=5, pady=5)
 
-    tk.Label(frame, text="Fecha del evento:", font=("Arial", 12)).grid(row=3, column=0, padx=5, pady=5)
+    tk.Label(frame, text="Nombre del evento:", font=("Arial", 12)).grid(row=3, column=0, padx=5, pady=5)
+    entrada_evento = tk.Entry(frame, font=("Arial", 12))
+    entrada_evento.grid(row=3, column=1, padx=5, pady=5)
+
+    tk.Label(frame, text="Fecha del evento:", font=("Arial", 12)).grid(row=4, column=0, padx=5, pady=5)
     entrada_fecha = tk.Entry(frame, font=("Arial", 12))
-    entrada_fecha.grid(row=3, column=1, padx=5, pady=5)
+    entrada_fecha.grid(row=4, column=1, padx=5, pady=5)
 
     boton_finalizar = tk.Button(frame, text="Finalizar", font=("Arial", 12), command=finalizar)
-    boton_finalizar.grid(row=4, column=1, padx=5, pady=5)
+    boton_finalizar.grid(row=5, column=1, padx=5, pady=5)
 
 def iniciar_aplicacion():
     root = tk.Tk()
     root.title("Gestión de Guardias")
-    root.geometry("800x600")
+    root.geometry("960x600")
 
     def cargar_datos():
         data = leer_base_datos()
@@ -154,4 +171,5 @@ def iniciar_aplicacion():
     root.mainloop()
 
 iniciar_aplicacion()
+
 
