@@ -25,7 +25,7 @@ def leer_base_datos(data):
         nombre = hoja.cell(row=i, column=3).value
         rut = hoja.cell(row=i, column=4).value
 
-        if not nombre or not rut:  # Si nombre o rut están vacíos, termina la lectura
+        if not nombre or not rut:  
             break
                 
         nombres.append(nombre)
