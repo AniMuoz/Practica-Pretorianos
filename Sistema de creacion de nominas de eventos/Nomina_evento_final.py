@@ -4,6 +4,11 @@ import datetime
 import os
 import tkinter as tk
 from tkinter import messagebox, filedialog
+from tkinter import Tk, ttk, filedialog, simpledialog
+from PIL import Image, ImageTk
+
+directorio_raiz = os.path.dirname(os.path.abspath(__file__))
+ruta_imagen = os.path.join(directorio_raiz, 'images', 'LOGOFOOTER.PNG')
 
 def leer_base_datos():
     file = filedialog.askopenfilename(title="Seleccione el archivo de base de datos", filetypes=[("Archivos Excel", "*.xlsx")])
@@ -123,7 +128,7 @@ def agregar_guardias(data, root):
             messagebox.showerror("Error", "Debe ingresar el nombre y la fecha del evento.")
             return
         escribir_nomina(guardias, evento, fecha)
-
+        
     frame = tk.Frame(root)
     frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
@@ -158,15 +163,33 @@ def agregar_guardias(data, root):
 def iniciar_aplicacion():
     root = tk.Tk()
     root.title("Gestión de Guardias")
-    root.geometry("960x600")
+    root.geometry("960x650")
 
     def cargar_datos():
         data = leer_base_datos()
         if data:
             agregar_guardias(data, root)
 
+    # Cargar el logo
+    try:
+        logo = Image.open(ruta_imagen)  # Asegúrate de tener el archivo logo.png en el directorio
+        logo = logo.resize((60, 78))
+        logo_img = ImageTk.PhotoImage(logo)
+        logo_label = tk.Label(root, image=logo_img)
+        logo_label.image = logo_img  # Mantener referencia para evitar recolección de basura
+        logo_label.place(x=800, y=10)  # Posicionar el logo en la esquina superior derecha
+    except FileNotFoundError:
+        messagebox.showwarning("Advertencia", "No se encontró el archivo del logo.")
+
     boton_cargar = tk.Button(root, text="Cargar Base de Datos", font=("Arial", 14), command=cargar_datos)
     boton_cargar.pack(pady=20)
+    
+    # Agregar el mensaje de derechos reservados
+    frame_footer = ttk.Frame(root)
+    frame_footer.pack(side="bottom", fill="x")
+
+    lbl_derechos = ttk.Label(frame_footer, text="© 2024 Pretorianos Seguridad. Todos los derechos reservados.", anchor="w")
+    lbl_derechos.pack(side="left", padx=10, pady=5)
 
     root.mainloop()
 
